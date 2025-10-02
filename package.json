@@ -1,0 +1,30 @@
+{
+  "name": "nest-metric",
+  "version": "0.0.1",
+  "description": "Библиотека для сбора метрик с высоконагруженного приложения на Nest.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "nestjs",
+    "performance",
+    "monitoring",
+    "metrics"
+  ],
+  "author": "Семиков Алексей Александрович",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.0"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.0.0"
+  },
+  "files": [
+    "dist/**/*"
+  ]
+}
