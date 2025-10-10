@@ -1,0 +1,9 @@
+#!/bin/sh
+STAGED_FILES=$(git diff --name-only --cached)
+
+npm run format
+npm run lint:fix
+
+echo "$STAGED_FILES" | xargs git add
+
+npm run lint
