@@ -21,6 +21,14 @@
     ],
     "author": "Семиков Алексей Александрович",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/aasemikov/nest-metrics"
+    },
+    "homepage": "https://github.com/aasemikov/nest-metrics",
+    "bugs": {
+        "url": "https://github.com/aasemikov/nest-metrics/issues"
+    },
     "devDependencies": {
         "@eslint/js": "^9.37.0",
         "@types/eslint__js": "^8.42.3",
@@ -38,6 +46,9 @@
         "@nestjs/common": "^10.0.0"
     },
     "files": [
-        "dist/**/*"
+        "dist",
+        "LICENSE",
+        "README.md",
+        "package.json"
     ]
 }
