@@ -1,30 +1,43 @@
 {
-  "name": "nest-metric",
-  "version": "0.0.1",
-  "description": "Библиотека для сбора метрик с высоконагруженного приложения на Nest.js",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "prepublishOnly": "npm run build"
-  },
-  "keywords": [
-    "nestjs",
-    "performance",
-    "monitoring",
-    "metrics"
-  ],
-  "author": "Семиков Алексей Александрович",
-  "license": "MIT",
-  "devDependencies": {
-    "typescript": "^5.3.3",
-    "@types/node": "^20.10.0"
-  },
-  "peerDependencies": {
-    "@nestjs/common": "^10.0.0"
-  },
-  "files": [
-    "dist/**/*"
-  ]
+    "name": "nest-metric",
+    "version": "0.0.1",
+    "description": "Библиотека для сбора метрик с высоконагруженного приложения на Nest.js",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc --watch",
+        "prepublishOnly": "npm run build",
+        "lint": "eslint \"src/**/*.ts\"",
+        "lint:fix": "eslint \"src/**/*.ts\" --fix",
+        "format": "prettier --write \"src/**/*.ts",
+        "hook:path": "git config core.hooksPath .hooks || echo 'Not in a git repo'"
+    },
+    "keywords": [
+        "nestjs",
+        "performance",
+        "monitoring",
+        "metrics"
+    ],
+    "author": "Семиков Алексей Александрович",
+    "license": "MIT",
+    "devDependencies": {
+        "@eslint/js": "^9.37.0",
+        "@types/eslint__js": "^8.42.3",
+        "@types/node": "^20.10.0",
+        "@typescript-eslint/eslint-plugin": "^8.46.0",
+        "@typescript-eslint/parser": "^8.46.0",
+        "eslint": "^9.37.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.4",
+        "prettier": "^3.6.2",
+        "typescript": "^5.3.3",
+        "typescript-eslint": "^8.46.0"
+    },
+    "peerDependencies": {
+        "@nestjs/common": "^10.0.0"
+    },
+    "files": [
+        "dist/**/*"
+    ]
 }
