@@ -68,10 +68,13 @@ jobs:
         needs: update-version
         if: needs.update-version.outputs.version_updated == 'true'
         steps:
-            - name: Checkout Code
+            - name: Checkout Code with updated version
               uses: actions/checkout@v4
               with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
                   fetch-depth: 0
+                  # Выполняем git pull чтобы получить последние изменения
+                  ref: master
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
@@ -82,16 +85,42 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Verify updated version
+              run: |
+                  echo "Current version in package.json:"
+                  node -p "require('./package.json').version"
+                  echo "Expected version: ${{ needs.update-version.outputs.new_version }}"
+
             - name: Run linting
               run: npm run lint
 
             - name: Build package
               run: npm run build
 
+            - name: Check if version already published
+              id: check_publish
+              run: |
+                  VERSION=${{ needs.update-version.outputs.new_version }}
+                  PACKAGE_NAME=$(node -p "require('./package.json').name")
+                  echo "Checking if version $VERSION of $PACKAGE_NAME is already published..."
+
+                  if npm view $PACKAGE_NAME@$VERSION version >/dev/null 2>&1; then
+                    echo "Version $VERSION already published, skipping"
+                    echo "should_publish=false" >> $GITHUB_OUTPUT
+                  else
+                    echo "Version $VERSION not published, will publish"
+                    echo "should_publish=true" >> $GITHUB_OUTPUT
+                  fi
+
             - name: Publish to NPM
+              if: steps.check_publish.outputs.should_publish == 'true'
               run: npm publish
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_ACCESS_TOKEN }}
+
+            - name: Skip publish message
+              if: steps.check_publish.outputs.should_publish == 'false'
+              run: echo "✅ Version ${{ needs.update-version.outputs.new_version }} already published, skipping"
 
     merge-master-to-develop:
         name: Merge master to develop
@@ -122,10 +151,3 @@ jobs:
                   git push origin develop
 
                   echo "✅ Successfully merged master into develop"
-
-            - name: Create Git Tag for release
-              run: |
-                  VERSION=${{ needs.update-version.outputs.new_version }}
-                  git tag -a "$VERSION" -m "Release $VERSION"
-                  git push origin "$VERSION"
-              if: success()
