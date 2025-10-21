@@ -11,7 +11,11 @@ echo 'Linter Fix...'
 npm run lint:fix
 
 echo 'Git add...'
-echo "$STAGED_FILES" | xargs git add
+echo "$STAGED_FILES" | while read file; do
+    if [ -f "$file" ]; then
+        git add "$file"
+    fi
+done
 
 echo 'Linter...'
 npm run lint
