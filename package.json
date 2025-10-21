@@ -1,6 +1,7 @@
 {
     "name": "nest-metric",
-    "version": "0.0.1",
+    "type": "module",
+    "version": "0.0.2",
     "description": "Библиотека для сбора метрик с высоконагруженного приложения на Nest.js",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -43,7 +44,9 @@
         "typescript-eslint": "^8.46.0"
     },
     "peerDependencies": {
-        "@nestjs/common": "^10.0.0"
+        "@nestjs/common": "^10.0.0",
+        "@nestjs/core": "^10.0.0",
+        "reflect-metadata": "^0.1.13"
     },
     "files": [
         "dist",
