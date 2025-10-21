@@ -10,9 +10,6 @@ npm run format
 echo 'Linter Fix...'
 npm run lint:fix
 
-echo 'Update patch version...'
-npm run patch:up
-
 echo 'Git add...'
 echo "$STAGED_FILES" | xargs git add
 
