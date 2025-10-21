@@ -1,0 +1,46 @@
+name: Update Version on Merge
+
+on:
+    pull_request:
+        types: [closed]
+        branches: [master]
+
+jobs:
+    update-version:
+        if: github.event.pull_request.merged == true
+        runs-on: ubuntu-latest
+
+        permissions:
+          contents: write
+          pull-requests: read
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+                  fetch-depth: 0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '18'
+                  cache: 'npm'
+
+            - name: Get PR title
+              id: pr_title
+              run: |
+                  TITLE="${{ github.event.pull_request.title }}"
+                  echo "title=${TITLE}" >> $GITHUB_OUTPUT
+
+            - name: Update version based on PR title
+              run: |
+                  npm run version:update "${{ steps.pr_title.outputs.title }}"
+
+            - name: Commit version update
+              run: |
+                  git config --local user.email "aleksey.i99@mail.ru"
+                  git config --local user.name "aasemikov"
+                  git add package.json
+                  git commit -m "chore: bump version to $(node -p "require('./package.json').version") [skip ci]"
+                  git push

@@ -12,7 +12,11 @@
         "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "eslint \"src/**/*.ts\" --fix",
         "format": "prettier --write \"src/**/*.ts",
-        "hook:path": "git config core.hooksPath .hooks || echo 'Not in a git repo'"
+        "hook:path": "git config core.hooksPath .hooks || echo 'Not in a git repo'",
+        "version:update": "node scripts/version-updater.js",
+        "version:major": "node scripts/version-updater.js major",
+        "version:minor": "node scripts/version-updater.js minor",
+        "version:patch": "node scripts/version-updater.js patch"
     },
     "keywords": [
         "nestjs",
