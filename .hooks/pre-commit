@@ -3,6 +3,7 @@ STAGED_FILES=$(git diff --name-only --cached)
 
 npm run format
 npm run lint:fix
+npm run patch:up
 
 echo "$STAGED_FILES" | xargs git add
 
