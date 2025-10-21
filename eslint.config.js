@@ -1,8 +1,8 @@
 // eslint.config.js
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
+const eslint = require('@eslint/js');
+const tseslint = require('typescript-eslint');
 
-export default tseslint.config(
+module.exports = tseslint.config(
     {
         ignores: ['dist/**', 'node_modules/**', '*.js'],
     },
@@ -18,7 +18,7 @@ export default tseslint.config(
             parser: tseslint.parser,
             parserOptions: {
                 project: true,
-                tsconfigRootDir: import.meta.dirname,
+                tsconfigRootDir: __dirname,
             },
         },
         rules: {
