@@ -1,7 +1,7 @@
 {
     "name": "nest-monitor",
     "type": "commonjs",
-    "version": "0.2.6",
+    "version": "0.2.8",
     "description": "Библиотека для сбора метрик с высоконагруженного приложения на Nest.js",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
