@@ -1,5 +1,5 @@
 {
-    "name": "nest-metrics",
+    "name": "nest-monitor",
     "type": "commonjs",
     "version": "0.2.6",
     "description": "Библиотека для сбора метрик с высоконагруженного приложения на Nest.js",
