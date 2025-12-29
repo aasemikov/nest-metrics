@@ -1,7 +1,6 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module, OnModuleInit } from '@nestjs/common';
 import { DiscoveryModule, DiscoveryService, Reflector } from '@nestjs/core';
-import { IAutoTestMetadata } from '../interfaces/auto-test-metadata.interface';
 import { AUTO_TEST_METADATA } from './auto-test.constants';
 import { AutoTestService } from './auto-test.service';
 
@@ -20,29 +19,38 @@ export class AutoTestModule implements OnModuleInit {
     onModuleInit() {
         const controllers = this.discoveryService.getControllers();
 
-        for (const controller of controllers) {
-            const instance = controller.instance;
-            const prototype = Object.getPrototypeOf(instance);
+        for (const wrapper of controllers) {
+            const metatype = wrapper.metatype;
+            const shouldAutoTest = this.reflector.get<boolean>(AUTO_TEST_METADATA, metatype);
 
-            const methodNames = Object.getOwnPropertyNames(prototype).filter(
-                (name) => name !== 'constructor' && typeof prototype[name] === 'function'
-            );
+            if (!shouldAutoTest) continue;
 
-            for (const methodName of methodNames) {
-                const methodRef = prototype[methodName];
-                const metadata = this.reflector.get<IAutoTestMetadata>(
-                    AUTO_TEST_METADATA,
-                    methodRef
-                );
+            const endpoints = this.extractGetEndpoints(metatype);
+            const controllerName = metatype.name || 'UnknownController';
 
-                if (metadata && metadata.method === 'GET' && metadata.path) {
-                    this.autoTestService.registerEndpoint(
-                        metadata,
-                        controller.metatype,
-                        methodName
-                    );
-                }
+            this.autoTestService.registerControllerEndpoints(controllerName, endpoints);
+        }
+    }
+
+    private extractGetEndpoints(metatype: any): { path: string; methodName: string }[] {
+        const endpoints: { path: string; methodName: string }[] = [];
+        const prototype = Object.getPrototypeOf(metatype.prototype);
+
+        const methodNames = Object.getOwnPropertyNames(prototype).filter(
+            (name) => name !== 'constructor' && typeof prototype[name] === 'function'
+        );
+
+        for (const methodName of methodNames) {
+            const methodRef = prototype[methodName];
+
+            const routePath = Reflect.getMetadata('path', methodRef) as string | undefined;
+            const requestMethod = Reflect.getMetadata('method', methodRef) as number | undefined;
+
+            if (routePath !== undefined && requestMethod === 0) {
+                endpoints.push({ path: routePath, methodName });
             }
         }
+
+        return endpoints;
     }
 }
