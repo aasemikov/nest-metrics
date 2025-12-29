@@ -39,9 +39,10 @@ export class AutoTestService implements OnApplicationBootstrap {
                     if (logSuccess) {
                         console.log(`  ✅ ${url} → OK (${duration}мс)`);
                     }
-                } catch (error: any) {
+                } catch (error: unknown) {
+                    const axiosError = error as { response?: { status: number }; message?: string };
                     const duration = Date.now() - start;
-                    const status = error.response?.status || '???';
+                    const status = axiosError.response?.status || '???';
                     if (logErrors) {
                         console.error(`  ❌ ${url} → ${status} (${duration}мс)`);
                     }

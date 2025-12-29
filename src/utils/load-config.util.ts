@@ -1,6 +1,9 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { DEFAULT_AUTO_TEST_OPTIONS, IAutoTestOptions } from '../interfaces/auto-test-option.interface';
+import {
+    DEFAULT_AUTO_TEST_OPTIONS,
+    IAutoTestOptions,
+} from '../interfaces/auto-test-option.interface';
 
 export function loadAutoTestConfig(): Required<IAutoTestOptions> {
     const configPath = join(process.cwd(), '.nestmonitor');
@@ -15,6 +18,7 @@ export function loadAutoTestConfig(): Required<IAutoTestOptions> {
             userConfig = parsed;
         }
     } catch (e) {
+        // Файл не существует или содержит невалидный JSON — используем значения по умолчанию
     }
 
     return {
