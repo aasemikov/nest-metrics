@@ -2,12 +2,14 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { IAutoTestEndpoint } from '../interfaces/auto-test-endpoint.interface';
+import { loadAutoTestConfig } from '../utils/load-config.util';
 
 @Injectable()
 export class AutoTestService implements OnApplicationBootstrap {
     private endpoints: { controllerName: string; endpoints: IAutoTestEndpoint[] }[] = [];
+    private readonly options = loadAutoTestConfig();
 
-    constructor(private readonly httpService: HttpService) {}
+    constructor(private readonly httpService: HttpService) { }
 
     registerControllerEndpoints(controllerName: string, endpoints: IAutoTestEndpoint[]) {
         if (endpoints.length > 0) {
@@ -16,37 +18,38 @@ export class AutoTestService implements OnApplicationBootstrap {
     }
 
     async onApplicationBootstrap() {
-        if (this.endpoints.length === 0) {
-            console.log('[AutoTest] Нет контроллеров для автоматического тестирования.');
+        if (!this.options.enabled || this.endpoints.length === 0) {
             return;
         }
 
-        console.log(`\n[AutoTest] Запуск тестов для ${this.endpoints.length} контроллеров...\n`);
-
-        const host = process.env.HOST || '127.0.0.1';
-        const port = process.env.PORT || '3000';
+        const { host, port, timeoutMs, logSuccess, logErrors } = this.options;
         const baseUrl = `http://${host}:${port}`;
 
+        console.log(`\n[AutoTest] Запуск тестов для ${this.endpoints.length} контроллеров...\n`);
+
         for (const { controllerName, endpoints } of this.endpoints) {
-            console.log(`\n🔍 [AutoTest] Контроллер: ${controllerName}`);
-            for (const endpoint of endpoints) {
-                const url = `${baseUrl}${endpoint.path}`;
+            console.log(`🔍 Контроллер: ${controllerName}`);
+            for (const { path } of endpoints) {
+                const url = `${baseUrl}${path}`;
                 const start = Date.now();
 
                 try {
-                    console.log(`  → Тестирую: GET ${url}`);
-                    const response = await firstValueFrom(this.httpService.get(url));
+                    await firstValueFrom(this.httpService.get(url, { timeout: timeoutMs }));
                     const duration = Date.now() - start;
-                    console.log(`    ✅ УСПЕХ: статус ${response.status} (${duration}мс)`);
-                } catch (error: any) {
+                    if (logSuccess) {
+                        console.log(`  ✅ ${url} → OK (${duration}мс)`);
+                    }
+                } catch (error: unknown) {
+                    const axiosError = error as { response?: { status: number }; message?: string };
                     const duration = Date.now() - start;
-                    const status = error.response?.status || '???';
-                    const message = error.message || 'Неизвестная ошибка';
-                    console.error(`    ❌ ОШИБКА: статус ${status} (${duration}мс) — ${message}`);
+                    const status = axiosError.response?.status || '???';
+                    if (logErrors) {
+                        console.error(`  ❌ ${url} → ${status} (${duration}мс)`);
+                    }
                 }
             }
         }
 
-        console.log('\n[AutoTest] Автоматическое тестирование завершено.\n');
+        console.log('\n[AutoTest] Завершено.\n');
     }
 }
