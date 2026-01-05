@@ -19,6 +19,7 @@ export function loadAutoTestConfig(): Required<IAutoTestOptions> {
         }
     } catch (e) {
         // Файл не существует или содержит невалидный JSON — используем значения по умолчанию
+        console.warn(`[AutoTest] Не удалось загрузить конфиг-файл, error: ${e}`);
     }
 
     return {
