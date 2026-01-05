@@ -10,7 +10,7 @@ export class AutoTestService implements OnApplicationBootstrap {
     private endpoints: { controllerName: string; endpoints: IAutoTestEndpoint[] }[] = [];
     private readonly options = loadAutoTestConfig();
 
-    constructor(private readonly httpService: HttpService) {}
+    constructor(private readonly httpService: HttpService) { }
 
     private async testEndpointUrl(url: string): Promise<void> {
         const { timeoutMs, logSuccess, logErrors } = this.options;
@@ -39,7 +39,9 @@ export class AutoTestService implements OnApplicationBootstrap {
     }
 
     async onApplicationBootstrap() {
+        console.log('AutoTestService.onApplicationBootstrap: Запуск...')
         if (!this.options.enabled || this.endpoints.length === 0) {
+            console.log('AutoTestService.onApplicationBootstrap: Не найдено endpoint')
             return;
         }
 
