@@ -14,11 +14,12 @@ export class AutoTestModule implements OnModuleInit {
         private readonly discoveryService: DiscoveryService,
         private readonly autoTestService: AutoTestService,
         private readonly reflector: Reflector
-    ) {}
+    ) { }
 
     onModuleInit() {
+        console.log('[AutoTest] Сканирую контроллеры...');
         const controllers = this.discoveryService.getControllers();
-
+        console.log('[AutoTest] Найдено контроллеров:', controllers.length);
         for (const wrapper of controllers) {
             const metatype = wrapper.metatype;
             const shouldAutoTest = this.reflector.get<boolean>(AUTO_TEST_METADATA, metatype);
