@@ -16,6 +16,9 @@ export interface IAutoTestOptions {
 
     // Логировать ошибки (по умолчанию: true)
     logErrors?: boolean;
+
+    // Путь к файлам тестов
+    autoTestDir?: string;
 }
 
 export const DEFAULT_AUTO_TEST_OPTIONS: Required<IAutoTestOptions> = {
@@ -25,4 +28,5 @@ export const DEFAULT_AUTO_TEST_OPTIONS: Required<IAutoTestOptions> = {
     timeoutMs: 5000,
     logSuccess: true,
     logErrors: true,
+    autoTestDir: './auto-test',
 };
