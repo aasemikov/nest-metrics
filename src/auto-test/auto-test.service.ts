@@ -40,6 +40,7 @@ export class AutoTestService implements OnApplicationBootstrap {
 
     async onApplicationBootstrap() {
         console.log('AutoTestService.onApplicationBootstrap: Запуск...')
+        console.log(this.options.enabled, this.endpoints);
         if (!this.options.enabled || this.endpoints.length === 0) {
             console.log('AutoTestService.onApplicationBootstrap: Не найдено endpoint')
             return;
