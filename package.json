@@ -52,7 +52,7 @@
         "typescript-eslint": "^8.46.0"
     },
     "peerDependencies": {
-        "@nestjs/axios": "^4.0.0",
+        "@nestjs/axios": "^2.0.0 || ^3.0.0 || ^4.0.0",
         "@nestjs/common": "^9.0.0 || ^10.0.0 || ^11.0.0",
         "@nestjs/core": "^9.0.0 || ^10.0.0 || ^11.0.0",
         "rxjs": "^7.8.0 || ^8.0.0 || ^9.0.0"
