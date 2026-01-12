@@ -16,8 +16,6 @@ export class AutoTestService implements OnApplicationBootstrap {
         const { timeoutMs, logSuccess, logErrors } = this.options;
         const start = Date.now();
 
-        console.log("Кофигурация:", this.options);
-
         try {
             await firstValueFrom(this.httpService.get(url, { timeout: timeoutMs }));
             const duration = Date.now() - start;
@@ -55,6 +53,8 @@ export class AutoTestService implements OnApplicationBootstrap {
         for (const { controllerName, endpoints } of this.endpoints) {
             console.log(`🔍 Контроллер: ${controllerName}`);
             for (const { path } of endpoints) {
+                console.log(path);
+
                 const hasParams = path.includes(':') || path.includes('*');
 
                 if (hasParams) {
