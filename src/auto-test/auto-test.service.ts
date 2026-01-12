@@ -16,6 +16,8 @@ export class AutoTestService implements OnApplicationBootstrap {
         const { timeoutMs, logSuccess, logErrors } = this.options;
         const start = Date.now();
 
+        console.log("Кофигурация:", this.options);
+
         try {
             await firstValueFrom(this.httpService.get(url, { timeout: timeoutMs }));
             const duration = Date.now() - start;
@@ -39,8 +41,7 @@ export class AutoTestService implements OnApplicationBootstrap {
     }
 
     async onApplicationBootstrap() {
-        console.log('AutoTestService.onApplicationBootstrap: Запуск...')
-        console.log(this.options.enabled, this.endpoints);
+        console.log('AutoTestService.onApplicationBootstrap: Запуск...');
         if (!this.options.enabled || this.endpoints.length === 0) {
             console.log('AutoTestService.onApplicationBootstrap: Не найдено endpoint')
             return;
